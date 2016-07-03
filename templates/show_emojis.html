@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Emoji Market</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <h1>Emojis:</h1>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    {% for emoji in emojis %}
+    <li>
+        <a href="{{ url_for('emojis', name=emoji.name) }}">ID: {{ emoji.id }}, Name: {{ emoji.name }}</a>
+        - {{ emoji.latest_stock_price.value }}
+    </li>
+    {% endfor %}
+  </body>
+</html>
+

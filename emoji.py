@@ -1,9 +1,12 @@
+import os
+
 from flask import Flask
 from flask_bootstrap import Bootstrap
+from flask_sqlalchemy import SQLAlchemy
 
-#@app.route('/')
-#using application factories pattern wat
-def create_app(configfile=None):
-    app = Flask(__name__)
-    Bootstrap( app )
-    return app
+
+app = Flask(__name__)
+app.config.from_object(os.environ["APP_SETTINGS"])
+db = SQLAlchemy(app)
+
+Bootstrap(app)

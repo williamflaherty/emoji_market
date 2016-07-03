@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ emoji.name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <a href="{{ url_for('emojis')  }}">Back</a>
+    <h1>
+    ID: {{ emoji.id }}, Name: {{ emoji.name }}
+    </h1>
+    <h2>Current Value: {{ emoji.latest_stock_price.value }}</h2>
+    <span>All Values:</span>
+    {% for history in emoji.stock_histories|reverse %}
+    <li>{{ history.date }} - {{ history.value }}</li>
+    {% endfor %}
+  </body>
+</html>
+
