@@ -1,6 +1,6 @@
 from flask import render_template
 
-from emoji import app
+from emoji_app import app
 from emoji_app import models
 
 
