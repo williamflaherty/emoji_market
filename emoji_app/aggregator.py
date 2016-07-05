@@ -1,3 +1,6 @@
+import time
+
+from emoji_app import config
 from emoji_app import models
 from emoji_app import redis_conn
 
@@ -9,9 +12,19 @@ class EmojiAggregator():
     Grab all of the redis key/values and create the appropriate models to store in the db
     Then, flush redis LOL
     """
-    def run(self):
-        emoji_counts = {name: redis_conn.get(name) for name in redis_conn.keys()}
+    def add_emoji(self, emoji_name):
+        redis_conn.incr(emoji_name)
+
+    def get_emojis(self):
+        return {name: redis_conn.get(name) for name in redis_conn.keys()}
+
+    def reset_emojis(self):
         redis_conn.flushall()
+
+    def run(self):
+        start = time.time()
+        emoji_counts = self.get_emojis()
+        self.reset_emojis()
 
         count = 0
         emojis = models.Emoji.query.all()
@@ -31,4 +44,7 @@ class EmojiAggregator():
 
             count += number_seen
 
+        end = time.time()
+        if config.DEBUG:
+            print "EmojiAggregator completed in %s seconds" % (end - start,)
         return count

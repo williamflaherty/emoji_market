@@ -13,9 +13,7 @@ def index():
 @app.route("/emojis/<name>")
 def emojis(name=None):
     if name:
-        emoji = models.Emoji.query.filter_by(name=name).one_or_none()
-        if not emoji:
-            emoji = models.Emoji.create(name=name)
+        emoji = models.Emoji.query.filter_by(name=name).first_or_404()
         return render_template("show_emoji.html", emoji=emoji)
 
     emojis = models.Emoji.query.all()
