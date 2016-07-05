@@ -1,3 +1,6 @@
+import time
+
+from emoji_app import config
 from emoji_app import models
 from emoji_app import redis_conn
 
@@ -19,6 +22,7 @@ class EmojiAggregator():
         redis_conn.flushall()
 
     def run(self):
+        start = time.time()
         emoji_counts = self.get_emojis()
         self.reset_emojis()
 
@@ -40,4 +44,7 @@ class EmojiAggregator():
 
             count += number_seen
 
+        end = time.time()
+        if config.DEBUG:
+            print "EmojiAggregator completed in %s seconds" % (end - start,)
         return count

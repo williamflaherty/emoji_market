@@ -17,25 +17,30 @@ emojis_to_track = all_emoji_unicode[:config.MAX_EMOJIS_TO_QUERY]
 
 class EmojiListener(StreamListener):
 
-    def __init__(self, emoji_aggregator):
+    def __init__(self, emoji_aggregator=None):
         self.emoji_aggregator = emoji_aggregator
         super(EmojiListener, self).__init__()
+
+    def increment_emoji(self, emoji_name):
+        if self.emoji_aggregator:
+            self.emoji_aggregator.add_emoji(emoji_name)
 
     def on_data(self, data):
         text = json.loads(data).get("text")
         if not text:
             return True
-        for emoji_code in emojis_to_track:
-            if emoji_code in text:
-                name = emoji_lib.UNICODE_EMOJI[emoji_code]
-                self.emoji_aggregator.add_emoji(name)
+        words = text.split()
+        for word in words:
+            emoji_name = emoji_lib.UNICODE_EMOJI.get(word)
+            if emoji_name:
+                self.increment_emoji(emoji_name)
         return True
 
     def on_error(self, status):
         print status
 
 
-def start_stream(emoji_aggregator):
+def start_stream(emoji_aggregator=None):
     listener = EmojiListener(emoji_aggregator)
     auth = OAuthHandler(config.TWITTER_CONSUMER_KEY, config.TWITTER_SECRET)
     auth.set_access_token(config.TWITTER_ACCESS_TOKEN, config.TWITTER_ACCESS_TOKEN_SECRET)
