@@ -1,6 +1,9 @@
 import datetime
 
+import emoji as emoji_lib
+
 from emoji_app import db
+from emoji_app import stats
 from emoji_app.utils import AppModel
 
 
@@ -14,6 +17,10 @@ class Emoji(db.Model, AppModel):
         return '<models.Emoji id=%s name="%s">' % (self.id, self.name)
 
     @property
+    def emoji_unicode(self):
+        return emoji_lib.emojize(self.name)
+
+    @property
     def stock_histories(self):
         return StockHistory.query.filter_by(emoji_id=self.id)
 
@@ -25,6 +32,17 @@ class Emoji(db.Model, AppModel):
 
     def add_stock_history(self, value):
         StockHistory.create(emoji_id=self.id, value=value)
+        stats.precompute_latest_delta(self, latest_value=value)
+
+    @property
+    def latest_delta(self):
+        emoji_stats = stats.get_stats_for_emoji(self)
+        return emoji_stats.get("delta")
+
+    @property
+    def latest_percent_change(self):
+        emoji_stats = stats.get_stats_for_emoji(self)
+        return emoji_stats.get("percent_change")
 
 
 class StockHistory(db.Model, AppModel):

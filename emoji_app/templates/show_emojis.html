@@ -3,16 +3,39 @@
   <head>
     <title>Emoji Market</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
   </head>
   <body>
-    <h1>Emojis:</h1>
+    <h1>Emoji Market</h1>
     <script src="http://code.jquery.com/jquery.js"></script>
-    {% for emoji in emojis %}
-    <li>
-        <a href="{{ url_for('emojis', name=emoji.name) }}">ID: {{ emoji.id }}, Name: {{ emoji.name }}</a>
-        - {{ emoji.latest_stock_price.value }}
-    </li>
-    {% endfor %}
+    <table class="table table-striped">
+        <tr>
+            <th>ID</th>
+            <th>Emoji</th>
+            <th>Name</th>
+            <th>Current Value</th>
+            <th>24hr Change</th>
+        </tr>
+        {% for emoji in emojis %}
+        <tr>
+            <td>{{ emoji.id }}</td>
+            <td>{{ emoji.emoji_unicode }}</td>
+            <td><a href="{{ url_for('emojis', name=emoji.name) }}">{{ emoji.name }}</a></td>
+            <td>{{ emoji.latest_stock_price.value }}</td>
+            {% set delta = emoji.latest_delta %}
+            {% if delta > 0 %}
+                {% set status = "success" %}
+            {% elif delta < 0 %}
+                {% set status = "danger" %}
+            {% else %}
+                {% set status = "" %}
+            {% endif %}
+            <td class={{ status }}>
+                {{ "+%s" % delta if delta > 0 else delta or "+0" }} ({{ emoji.latest_percent_change or "INF" }}%)
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
   </body>
 </html>
 

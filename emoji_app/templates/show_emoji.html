@@ -11,6 +11,7 @@
     ID: {{ emoji.id }}, Name: {{ emoji.name }}
     </h1>
     <h2>Current Value: {{ emoji.latest_stock_price.value }}</h2>
+    <h2>{{ "+%s" % emoji.latest_delta if emoji.latest_delta > 0 else emoji.latest_delta or "+0" }} ({{ emoji.latest_percent_change or "INF" }}%)</h2>
     <span>All Values:</span>
     {% for history in emoji.stock_histories|reverse %}
     <li>{{ history.date }} - {{ history.value }}</li>
