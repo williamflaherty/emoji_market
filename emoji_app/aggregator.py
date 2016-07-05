@@ -12,14 +12,16 @@ class EmojiAggregator():
     Grab all of the redis key/values and create the appropriate models to store in the db
     Then, flush redis LOL
     """
+    EMOJI_REDIS_KEY = "emojis"
+
     def add_emoji(self, emoji_name):
-        redis_conn.incr(emoji_name)
+        redis_conn.hincrby(self.EMOJI_REDIS_KEY, emoji_name)
 
     def get_emojis(self):
-        return {name: redis_conn.get(name) for name in redis_conn.keys()}
+        return redis_conn.hgetall(self.EMOJI_REDIS_KEY)
 
     def reset_emojis(self):
-        redis_conn.flushall()
+        redis_conn.delete(self.EMOJI_REDIS_KEY)
 
     def run(self):
         start = time.time()
