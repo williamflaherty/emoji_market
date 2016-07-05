@@ -1,6 +1,6 @@
 import datetime
 
-from emoji import db
+from emoji_app import db
 from emoji_app.utils import AppModel
 
 

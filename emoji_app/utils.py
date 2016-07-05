@@ -4,7 +4,7 @@ from contextlib import contextmanager
 @contextmanager
 def db_session():
 
-    from emoji import db
+    from emoji_app import db
 
     session = db.session()
     try:
