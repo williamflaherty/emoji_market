@@ -50,7 +50,7 @@ class StockHistory(db.Model, AppModel):
 
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    emoji_id = db.Column(db.Integer)
+    emoji_id = db.Column(index=True, db.Integer)
     value = db.Column(db.Integer)
 
     def __repr__(self):
