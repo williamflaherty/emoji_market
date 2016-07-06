@@ -1,4 +1,5 @@
 import datetime
+
 import emoji as emoji_lib
 
 from emoji_app import db
